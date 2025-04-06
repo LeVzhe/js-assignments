@@ -8,7 +8,6 @@
  *                                                                                                *
  **************************************************************************************************/
 
-
 /**
  * Returns the rectagle object with width and height parameters and getArea() method
  *
@@ -23,9 +22,13 @@
  *    console.log(r.getArea());   // => 200
  */
 function Rectangle(width, height) {
-    throw new Error('Not implemented');
-}
+    this.width = width;
+    this.height = height;
 
+    this.getArea = function () {
+        return this.width * this.height;
+    };
+}
 
 /**
  * Returns the JSON representation of specified object
@@ -38,9 +41,8 @@ function Rectangle(width, height) {
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
 function getJSON(obj) {
-    throw new Error('Not implemented');
+    return JSON.stringify(obj);
 }
-
 
 /**
  * Returns the object of specified type from JSON representation
@@ -54,9 +56,13 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
-    throw new Error('Not implemented');
-}
+    const obj = JSON.parse(json);
+    const instance = Object.create(proto);
 
+    Object.assign(instance, obj);
+
+    return instance;
+}
 
 /**
  * Css selectors builder
@@ -107,40 +113,38 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-
-    element: function(value) {
+    element: function (value) {
         throw new Error('Not implemented');
     },
 
-    id: function(value) {
+    id: function (value) {
         throw new Error('Not implemented');
     },
 
-    class: function(value) {
+    class: function (value) {
         throw new Error('Not implemented');
     },
 
-    attr: function(value) {
+    attr: function (value) {
         throw new Error('Not implemented');
     },
 
-    pseudoClass: function(value) {
+    pseudoClass: function (value) {
         throw new Error('Not implemented');
     },
 
-    pseudoElement: function(value) {
+    pseudoElement: function (value) {
         throw new Error('Not implemented');
     },
 
-    combine: function(selector1, combinator, selector2) {
+    combine: function (selector1, combinator, selector2) {
         throw new Error('Not implemented');
     },
 };
-
 
 module.exports = {
     Rectangle: Rectangle,
     getJSON: getJSON,
     fromJSON: fromJSON,
-    cssSelectorBuilder: cssSelectorBuilder
+    cssSelectorBuilder: cssSelectorBuilder,
 };

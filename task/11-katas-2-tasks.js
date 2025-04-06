@@ -34,9 +34,40 @@
  *
  */
 function parseBankAccount(bankAccount) {
-    throw new Error('Not implemented');
-}
+    function parseBankAccount(bankAccount) {
+        // Map of OCR patterns to digits
+        const digitMap = {
+            ' _ | ||_|': '0',
+            '     |  |': '1',
+            ' _  _||_ ': '2',
+            ' _  _| _|': '3',
+            '   |_|  |': '4',
+            ' _ |_  _|': '5',
+            ' _ |_ |_|': '6',
+            ' _   |  |': '7',
+            ' _ |_||_|': '8',
+            ' _ |_| _|': '9',
+        };
 
+        let lines = bankAccount.split('\n');
+
+        if (lines.length < 3) return NaN;
+
+        let numDigits = Math.floor(lines[0].length / 3);
+        let result = '';
+
+        for (let i = 0; i < numDigits; i++) {
+            let digitPattern =
+                lines[0].slice(i * 3, i * 3 + 3) +
+                lines[1].slice(i * 3, i * 3 + 3) +
+                lines[2].slice(i * 3, i * 3 + 3);
+
+            result += digitMap[digitPattern] ?? '?';
+        }
+
+        return parseInt(result);
+    }
+}
 
 /**
  * Returns the string, but with line breaks inserted at just the right places to make sure that no line is longer than the specified column number.
@@ -65,7 +96,6 @@ function parseBankAccount(bankAccount) {
 function* wrapText(text, columns) {
     throw new Error('Not implemented');
 }
-
 
 /**
  * Returns the rank of the specified poker hand.
@@ -96,13 +126,49 @@ const PokerRank = {
     ThreeOfKind: 3,
     TwoPairs: 2,
     OnePair: 1,
-    HighCard: 0
-}
+    HighCard: 0,
+};
 
 function getPokerHandRank(hand) {
-    throw new Error('Not implemented');
-}
+    const rankOrder = '23456789TJQKA'; // Ordered values of poker cards
+    const rankCount = {}; // Frequency of each rank
+    const suitCount = {}; // Frequency of each suit
+    let ranks = [];
 
+    // Parse hand into ranks and suits
+    hand.forEach((card) => {
+        let rank = card[0],
+            suit = card.slice(-1);
+        ranks.push(rank);
+        rankCount[rank] = (rankCount[rank] || 0) + 1;
+        suitCount[suit] = (suitCount[suit] || 0) + 1;
+    });
+
+    let rankIndices = ranks
+        .map((rank) => rankOrder.indexOf(rank))
+        .sort((a, b) => a - b);
+
+    const isAceLowStraight =
+        JSON.stringify(rankIndices) === JSON.stringify([0, 1, 2, 3, 12]);
+    if (isAceLowStraight) rankIndices = [0, 1, 2, 3, 4];
+
+    const isStraight = rankIndices.every(
+        (val, i, arr) => i === 0 || val === arr[i - 1] + 1
+    );
+    const isFlush = Object.keys(suitCount).length === 1;
+
+    const counts = Object.values(rankCount).sort((a, b) => b - a);
+
+    if (isStraight && isFlush) return PokerRank.StraightFlush;
+    if (counts[0] === 4) return PokerRank.FourOfKind;
+    if (counts[0] === 3 && counts[1] === 2) return PokerRank.FullHouse;
+    if (isFlush) return PokerRank.Flush;
+    if (isStraight) return PokerRank.Straight;
+    if (counts[0] === 3) return PokerRank.ThreeOfKind;
+    if (counts[0] === 2 && counts[1] === 2) return PokerRank.TwoPairs;
+    if (counts[0] === 2) return PokerRank.OnePair;
+    return PokerRank.HighCard;
+}
 
 /**
  * Returns the rectangles sequence of specified figure.
@@ -110,19 +176,19 @@ function getPokerHandRank(hand) {
  * The task is to break the figure in the rectangles it is made of.
  *
  * NOTE: The order of rectanles does not matter.
- * 
+ *
  * @param {string} figure
  * @return {Iterable.<string>} decomposition to basic parts
- * 
+ *
  * @example
  *
  *    '+------------+\n'+
  *    '|            |\n'+
  *    '|            |\n'+              '+------------+\n'+
- *    '|            |\n'+              '|            |\n'+         '+------+\n'+          '+-----+\n'+
+ *    '|            |A\n'+              '|            |\n'+         '+------+\n'+          '+-----+\n'+
  *    '+------+-----+\n'+       =>     '|            |\n'+     ,   '|      |\n'+     ,    '|     |\n'+
  *    '|      |     |\n'+              '|            |\n'+         '|      |\n'+          '|     |\n'+
- *    '|      |     |\n'               '+------------+\n'          '+------+\n'           '+-----+\n'
+ *    '|      |     |\sn'               '+------------+\n'          '+------+\n'           '+-----+\n'
  *    '+------+-----+\n'
  *
  *
@@ -135,14 +201,13 @@ function getPokerHandRank(hand) {
  *    '+-------------+\n'
  */
 function* getFigureRectangles(figure) {
-   throw new Error('Not implemented');
+    throw new Error('Not implemented');
 }
 
-
 module.exports = {
-    parseBankAccount : parseBankAccount,
+    parseBankAccount: parseBankAccount,
     wrapText: wrapText,
     PokerRank: PokerRank,
     getPokerHandRank: getPokerHandRank,
-    getFigureRectangles: getFigureRectangles
+    getFigureRectangles: getFigureRectangles,
 };

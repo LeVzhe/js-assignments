@@ -7,7 +7,6 @@
  *                                                                                          *
  ********************************************************************************************/
 
-
 /**
  * Returns the regexp that matches a GUID string representation
  * '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}',
@@ -31,9 +30,8 @@
  * @return {RegExp}
  */
 function getRegexForGuid() {
-   throw new Error('Not implemented');
+    return /^\{[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}\}$/;
 }
-
 
 /**
  * Returns the regexp that matches all the strings from first column
@@ -53,9 +51,8 @@ function getRegexForGuid() {
  *
  */
 function getRegexForPitSpot() {
-   throw new Error('Not implemented');
+    return /\b(?:pit|spot|spate|slap two|respite)\b/i;
 }
-
 
 /**
  * Returns the regexp that matches all IPv4 strings in
@@ -72,9 +69,8 @@ function getRegexForPitSpot() {
  * @return {RegExp}
  */
 function getRegexForIPv4() {
-   throw new Error('Not implemented');
+    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 }
-
 
 /**
  * Returns the regexp that matches all SSN (Social Security Number) codes in
@@ -91,9 +87,8 @@ function getRegexForIPv4() {
  * @return {RegExp}
  */
 function getRegexForSSN() {
-   throw new Error('Not implemented');
+    return /^(?!000)\d{3}-(?!00)\d{2}-(?!0000)\d{4}$/;
 }
-
 
 /**
  * Returns the password validator regex.
@@ -116,14 +111,15 @@ function getRegexForSSN() {
  *   'Pa55'.match(validator) => false
  */
 function getPasswordValidator(minLength) {
-   throw new Error('Not implemented');
+    return new RegExp(
+        `^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z0-9]{${minLength},}$`
+    );
 }
-
 
 module.exports = {
     getRegexForGuid: getRegexForGuid,
     getRegexForPitSpot: getRegexForPitSpot,
     getRegexForIPv4: getRegexForIPv4,
     getRegexForSSN: getRegexForSSN,
-    getPasswordValidator: getPasswordValidator
+    getPasswordValidator: getPasswordValidator,
 };

@@ -8,7 +8,6 @@
  *                                                                                          *
  ********************************************************************************************/
 
-
 /**
  * Returns the lines sequence of "99 Bottles of Beer" song:
  *
@@ -33,9 +32,67 @@
  *
  */
 function* get99BottlesOfBeer() {
-    throw new Error('Not implemented');
-}
+    const lines = [
+        // Rows
+        [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+        ],
+        [
+            [1, 0],
+            [1, 1],
+            [1, 2],
+        ],
+        [
+            [2, 0],
+            [2, 1],
+            [2, 2],
+        ],
 
+        // Columns
+        [
+            [0, 0],
+            [1, 0],
+            [2, 0],
+        ],
+        [
+            [0, 1],
+            [1, 1],
+            [2, 1],
+        ],
+        [
+            [0, 2],
+            [1, 2],
+            [2, 2],
+        ],
+
+        // Diagonals
+        [
+            [0, 0],
+            [1, 1],
+            [2, 2],
+        ],
+        [
+            [0, 2],
+            [1, 1],
+            [2, 0],
+        ],
+    ];
+
+    for (const line of lines) {
+        const [a, b, c] = line;
+        const valA = position[a[0]]?.[a[1]];
+        const valB = position[b[0]]?.[b[1]];
+        const valC = position[c[0]]?.[c[1]];
+
+        if (valA && valA === valB && valA === valC) {
+            return valA;
+        }
+    }
+
+    return undefined; // No winner
+}
 
 /**
  * Returns the Fibonacci sequence:
@@ -47,9 +104,13 @@ function* get99BottlesOfBeer() {
  *
  */
 function* getFibonacciSequence() {
-    throw new Error('Not implemented');
+    let a = 0,
+        b = 1;
+    while (true) {
+        yield a;
+        [a, b] = [b, a + b]; // Update a and b to the next Fibonacci numbers
+    }
 }
-
 
 /**
  * Traverses a tree using the depth-first strategy
@@ -82,9 +143,18 @@ function* getFibonacciSequence() {
  *
  */
 function* depthTraversalTree(root) {
-    throw new Error('Not implemented');
-}
+    if (!root) return; // Проверяем, что корень существует
 
+    yield root; // Сначала отдаем корень
+
+    if (root.children) {
+        // Если у узла есть потомки
+        for (let child of root.children) {
+            // Рекурсивно обходим всех потомков
+            yield* depthTraversalTree(child); // Важный момент: используем yield* для рекурсии
+        }
+    }
+}
 
 /**
  * Traverses a tree using the breadth-first strategy
@@ -108,9 +178,33 @@ function* depthTraversalTree(root) {
  *
  */
 function* breadthTraversalTree(root) {
-    throw new Error('Not implemented');
-}
+    if (!root) return; // Проверяем, что корень есть
 
+    let queue = [root]; // Очередь для BFS
+
+    while (queue.length > 0) {
+        let node = queue.shift(); // Извлекаем первый элемент
+        yield node; // Возвращаем узел
+
+        if (node.children) {
+            queue.push(...node.children); // Добавляем всех потомков в очередь
+        }
+    }
+}
+function* breadthTraversalTree(root) {
+    if (!root) return; // Проверяем, что корень есть
+
+    let queue = [root]; // Очередь для BFS
+
+    while (queue.length > 0) {
+        let node = queue.shift(); // Извлекаем первый элемент
+        yield node; // Возвращаем узел
+
+        if (node.children) {
+            queue.push(...node.children); // Добавляем всех потомков в очередь
+        }
+    }
+}
 
 /**
  * Merges two yield-style sorted sequences into the one sorted sequence.
@@ -126,14 +220,41 @@ function* breadthTraversalTree(root) {
  *   [ 1, 3, 5, ... ], [ -1 ] => [ -1, 1, 3, 5, ...]
  */
 function* mergeSortedSequences(source1, source2) {
-    throw new Error('Not implemented');
-}
+    const iterator1 = source1[Symbol.iterator]();
+    const iterator2 = source2[Symbol.iterator]();
 
+    let next1 = iterator1.next();
+    let next2 = iterator2.next();
+
+    // Continue merging while there are elements in either sequence
+    while (!next1.done || !next2.done) {
+        // If source1 is exhausted, yield elements from source2
+        if (next1.done) {
+            yield next2.value;
+            next2 = iterator2.next();
+        }
+        // If source2 is exhausted, yield elements from source1
+        else if (next2.done) {
+            yield next1.value;
+            next1 = iterator1.next();
+        }
+        // If both sequences have elements, yield the smaller one
+        else {
+            if (next1.value <= next2.value) {
+                yield next1.value;
+                next1 = iterator1.next();
+            } else {
+                yield next2.value;
+                next2 = iterator2.next();
+            }
+        }
+    }
+}
 
 module.exports = {
     get99BottlesOfBeer: get99BottlesOfBeer,
     getFibonacciSequence: getFibonacciSequence,
     depthTraversalTree: depthTraversalTree,
     breadthTraversalTree: breadthTraversalTree,
-    mergeSortedSequences: mergeSortedSequences
+    mergeSortedSequences: mergeSortedSequences,
 };

@@ -9,7 +9,6 @@
  *                                                                                          *
  ********************************************************************************************/
 
-
 /**
  * Returns an area of a rectangle given by width and heigth.
  *
@@ -22,9 +21,8 @@
  *   5, 5  => 25
  */
 function getRectangleArea(width, height) {
-    throw new Error('Not implemented');
+    return width * height;
 }
-
 
 /**
  * Returns a circumference of circle given by radius.
@@ -38,13 +36,14 @@ function getRectangleArea(width, height) {
  *   0    => 0
  */
 function getCicleCircumference(radius) {
-    throw new Error('Not implemented');
+    let valueLength = 2 * radius * Math.PI;
+    return valueLength;
 }
 
 /**
  * Returns an average of two given numbers.
  *
- * @param {numder} value1
+ * @param {number} value1
  * @param {number} value2
  * @return {number}
  *
@@ -54,7 +53,7 @@ function getCicleCircumference(radius) {
  *  -3, 3  => 0
  */
 function getAverage(value1, value2) {
-    throw new Error('Not implemented');
+    return value1 / 2 + value2 / 2;
 }
 
 /**
@@ -73,7 +72,7 @@ function getAverage(value1, value2) {
  *   (-5,0) (10,-10) => 18.027756377319946
  */
 function getDistanceBetweenPoints(x1, y1, x2, y2) {
-    throw new Error('Not implemented');
+    return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 }
 
 /**
@@ -89,9 +88,11 @@ function getDistanceBetweenPoints(x1, y1, x2, y2) {
  *   5*x = 0         => 0
  */
 function getLinearEquationRoot(a, b) {
-    throw new Error('Not implemented');
+    if (a === 0) {
+        throw new Error("Coefficient 'a' cannot be zero in a linear equation");
+    }
+    return -b / a;
 }
-
 
 /**
  * Returns an angle (in radians) between two vectors given by xi and yi, coordinates in Cartesian plane
@@ -111,7 +112,17 @@ function getLinearEquationRoot(a, b) {
  *   (0,1) (1,2)     => 0
  */
 function getAngleBetweenVectors(x1, y1, x2, y2) {
-    throw new Error('Not implemented');
+    const dotProduct = x1 * x2 + y1 * y2;
+    const magnitude1 = Math.sqrt(x1 ** 2 + y1 ** 2);
+    const magnitude2 = Math.sqrt(x2 ** 2 + y2 ** 2);
+
+    if (magnitude1 === 0 || magnitude2 === 0) {
+        throw new Error('One of the vectors has zero length.');
+    }
+
+    let cosTheta = dotProduct / (magnitude1 * magnitude2);
+    cosTheta = Math.max(-1, Math.min(1, cosTheta));
+    return Math.acos(cosTheta);
 }
 
 /**
@@ -127,9 +138,8 @@ function getAngleBetweenVectors(x1, y1, x2, y2) {
  *     0     => 0
  */
 function getLastDigit(value) {
-    throw new Error('Not implemented');
+    return value.toString().split('').pop();
 }
-
 
 /**
  * Returns a number by given string representation.
@@ -143,7 +153,7 @@ function getLastDigit(value) {
  * '-525.5'     => -525.5
  */
 function parseNumberFromString(value) {
-    throw new Error('Not implemented');
+    return Number(value);
 }
 
 /**
@@ -159,8 +169,8 @@ function parseNumberFromString(value) {
  *   3,3,3   => 5.196152422706632
  *   1,2,3   => 3.741657386773941
  */
-function getParallelipidedDiagonal(a,b,c) {
-    throw new Error('Not implemented');
+function getParallelipidedDiagonal(a, b, c) {
+    return Math.sqrt(a ** 2 + b ** 2 + c ** 2);
 }
 
 /**
@@ -169,7 +179,7 @@ function getParallelipidedDiagonal(a,b,c) {
  * @param {number} num
  * @param {number} pow
  * @return {number}
- *  
+ *
  * @example:
  *   1234, 0  => 1234
  *   1234, 1  => 1230
@@ -181,7 +191,7 @@ function getParallelipidedDiagonal(a,b,c) {
  *   1678, 3  => 2000
  */
 function roundToPowerOfTen(num, pow) {
-    throw new Error('Not implemented');
+    return Math.round(num / Math.pow(10, pow)) * Math.pow(10, pow);
 }
 
 /**
@@ -190,7 +200,7 @@ function roundToPowerOfTen(num, pow) {
  *
  * @param {number} n
  * @return {bool}
- * 
+ *
  * @example:
  *   4 => false
  *   5 => true
@@ -201,8 +211,17 @@ function roundToPowerOfTen(num, pow) {
  *   16 => false
  *   17 => true
  */
+
 function isPrime(n) {
-    throw new Error('Not implemented');
+    if (n < 2) return false;
+    if (n === 2) return true;
+    if (n % 2 === 0) return false;
+
+    for (let i = 3; i <= Math.sqrt(n); i += 2) {
+        if (n % i === 0) return false;
+    }
+
+    return true;
 }
 
 /**
@@ -221,7 +240,8 @@ function isPrime(n) {
  *   toNumber(new Number(42), 0) => 42
  */
 function toNumber(value, def) {
-    throw new Error('Not implemented');
+    const numValue = Number(value);
+    return isNaN(numValue) ? def : numValue;
 }
 
 module.exports = {
@@ -236,5 +256,5 @@ module.exports = {
     getParallelipidedDiagonal: getParallelipidedDiagonal,
     roundToPowerOfTen: roundToPowerOfTen,
     isPrime: isPrime,
-    toNumber: toNumber
+    toNumber: toNumber,
 };
